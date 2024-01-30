@@ -8,6 +8,7 @@ import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.enums.ParameterIn;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -30,6 +31,8 @@ public class MusicController {
     /**
      * 음악 목록 조회 API
      * [GET] /api/music/
+     *
+     * @return musicList
      */
     @Operation(summary = "좋아하는 음악 목록 전체 조회", description = "등록된 모든 음악 목록을 조회합니다.")
     @GetMapping
@@ -41,6 +44,13 @@ public class MusicController {
                 .body(musicList);
     }
 
+    /**
+     * 음악 목록 단건 조회 API
+     * [GET] /api/music/{id}
+     *
+     * @param id
+     * @return music
+     */
     @Operation(summary = "좋아하는 음악 단건 조회", description = "아이디(Id)를 통해 음악을 조회합니다.")
     @GetMapping("/{id}")
     public ResponseEntity<Music> getMusic(@Parameter(name = "id", description = "Music의 id", in = ParameterIn.PATH) @PathVariable("id") Integer id) {
@@ -54,13 +64,26 @@ public class MusicController {
                     .body(music);
         }
     }
-    //음악 여러개 조회
+    //음악 여러 개 조회
 
     //음악 등록
+
+    /**
+     * 음악 등록 API
+     * [POST] /api/music/save
+     */
+    @Operation(summary = "음악 등록", description = "좋아하는 음악을 등록합니다.")
+    @PostMapping()
+    public ResponseEntity<Music> createMusic(@RequestBody Music music) {
+        try {
+            musicService.save(music);
+            return new ResponseEntity<>(music, HttpStatus.CREATED);
+        } catch (Exception e) {
+            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
     //음악 수정
     //음악 삭제
-
-
 }
 
 

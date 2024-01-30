@@ -19,10 +19,12 @@ public class MusicService {
     public List<Music> getAllMusic() {
         return musicRepository.findAll();
     }
-
-
-
+    
     public Music findBy(Integer id) {
         return musicRepository.findById(id);
+    }
+
+    public void save(Music music) {
+        musicRepository.save(music);
     }
 }
