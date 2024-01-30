@@ -87,7 +87,7 @@ public class MusicController {
      * @param id
      * @return
      */
-    @Operation(summary = "음악 수정", description = "좋아하는 음악 정볼르 수정합니다.")
+    @Operation(summary = "음악 수정", description = "좋아하는 음악 정보를 수정합니다.")
     @PutMapping("/{id}")
     public ResponseEntity<Music> updateMusic(@Parameter(name = "id", description = "수정할 Music의 id", in = ParameterIn.PATH) @PathVariable("id") Integer id, @RequestBody Music music) {
         try {
