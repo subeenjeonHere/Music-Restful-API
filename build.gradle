@@ -35,6 +35,9 @@ dependencies {
     implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.2.0'
     implementation 'io.swagger.core.v3:swagger-annotations:2.2.20'
     implementation 'org.springdoc:springdoc-openapi-ui:1.7.0'
+
+    implementation group: 'javax.persistence', name: 'javax.persistence-api', version: '2.2'
+
 }
 
 tasks.named('test') {

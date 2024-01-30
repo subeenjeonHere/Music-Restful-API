@@ -2,47 +2,65 @@ package com.sb.sampleapi.controller;
 
 import com.sb.sampleapi.domain.Music;
 import com.sb.sampleapi.service.MusicService;
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
-import lombok.Getter;
-import lombok.RequiredArgsConstructor;
+import io.swagger.annotations.*;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.enums.ParameterIn;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@RequiredArgsConstructor
 @RestController
 @Slf4j
+@Tag(name = "Music API", description = "음악 조회 CRUD API")
 @RequestMapping("/api/music")
-//파일별로 API 분류하기
-@Api(tags = "Music API", description = "Music CRUD API")
 public class MusicController {
-    
+
     private final MusicService musicService;
 
-    //음악 목록 조회
-    @ApiOperation(value = "좋아하는 음악 목록 조회", notes = "등록된 모든 음악 목록을 조회합니다.")
+    public MusicController(MusicService musicService) {
+        this.musicService = musicService;
+    }
+
+    //음악 단건 조회
+
+    /**
+     * 음악 목록 조회 API
+     * [GET] /api/music/
+     */
+    @Operation(summary = "좋아하는 음악 목록 전체 조회", description = "등록된 모든 음악 목록을 조회합니다.")
     @GetMapping
     public ResponseEntity<List<Music>> getAllMusic() {
         List<Music> musicList = musicService.getAllMusic();
-        if (musicList.isEmpty()) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        } else {
-            return new ResponseEntity<>(musicList, HttpStatus.OK);
-        }
 
+        return ResponseEntity.ok()
+                .header(String.valueOf(200))
+                .body(musicList);
     }
 
-    //음악 등록
-    //음악 단건 조회
+    @Operation(summary = "좋아하는 음악 단건 조회", description = "아이디(Id)를 통해 음악을 조회합니다.")
+    @GetMapping("/{id}")
+    public ResponseEntity<Music> getMusic(@Parameter(name = "id", description = "Music의 id", in = ParameterIn.PATH) @PathVariable("id") Integer id) {
+        Music music = musicService.findBy(id);
+        if (music == null) {
+            return ResponseEntity.notFound()
+                    .build();
+        } else {
+            return ResponseEntity.ok()
+                    .header(String.valueOf(200))
+                    .body(music);
+        }
+    }
     //음악 여러개 조회
+
+    //음악 등록
     //음악 수정
     //음악 삭제
+
+
 }
+
+
