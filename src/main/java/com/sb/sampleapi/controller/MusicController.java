@@ -7,12 +7,14 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.enums.ParameterIn;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.persistence.criteria.CriteriaBuilder;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @Slf4j
@@ -25,8 +27,6 @@ public class MusicController {
     public MusicController(MusicService musicService) {
         this.musicService = musicService;
     }
-
-    //음악 단건 조회
 
     /**
      * 음악 목록 조회 API
@@ -66,11 +66,9 @@ public class MusicController {
     }
     //음악 여러 개 조회
 
-    //음악 등록
-
     /**
      * 음악 등록 API
-     * [POST] /api/music/save
+     * [POST] /api/music
      */
     @Operation(summary = "음악 등록", description = "좋아하는 음악을 등록합니다.")
     @PostMapping()
@@ -82,7 +80,25 @@ public class MusicController {
             return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
-    //음악 수정
+    /**
+     * 음악 수정 API
+     * [PUT] /api/music/{id}
+     *
+     * @param id
+     * @return
+     */
+    @Operation(summary = "음악 수정", description = "좋아하는 음악 정볼르 수정합니다.")
+    @PutMapping("/{id}")
+    public ResponseEntity<Music> updateMusic(@Parameter(name = "id", description = "수정할 Music의 id", in = ParameterIn.PATH) @PathVariable("id") Integer id, @RequestBody Music music) {
+        try {
+            Music updateMusic = musicService.findBy(id);
+            if (updateMusic.getId().equals(id)) musicService.save(music);
+            return new ResponseEntity<>(HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
     //음악 삭제
 }
 
