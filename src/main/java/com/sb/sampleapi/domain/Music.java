@@ -32,4 +32,16 @@ public class Music {
     @Column(name = "album")
     @Schema(description = "앨범")
     private String album;
+
+    @Builder
+    public Music(Long id, String title, String artist, String album) {
+        this.id = id;
+        this.title = title;
+        this.artist = artist;
+        this.album = album;
+    }
+
+    public Music() {
+
+    }
 }
