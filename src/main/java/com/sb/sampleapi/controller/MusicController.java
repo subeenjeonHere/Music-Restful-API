@@ -6,6 +6,8 @@ import io.swagger.annotations.*;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.enums.ParameterIn;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.persistence.criteria.CriteriaBuilder;
 import lombok.extern.slf4j.Slf4j;
@@ -52,6 +54,10 @@ public class MusicController {
      * @return music
      */
     @Operation(summary = "좋아하는 음악 단건 조회", description = "아이디(Id)를 통해 음악을 조회합니다.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "음악 조회에 성공했습니다."),
+            @ApiResponse(responseCode = "404", description = "음악을 찾을 수 없습니다.")
+    })
     @GetMapping("/{id}")
     public ResponseEntity<Music> getMusic(@Parameter(name = "id", description = "Music의 id", in = ParameterIn.PATH) @PathVariable("id") Integer id) {
         Music music = musicService.findBy(id);
@@ -60,11 +66,15 @@ public class MusicController {
                     .build();
         } else {
             return ResponseEntity.ok()
-                    .header(String.valueOf(200))
+                    .header("200")
                     .body(music);
         }
     }
-    //음악 여러 개 조회
+
+    /**
+     * 음악 여러개 조회 API
+     *
+     */
 
     /**
      * 음악 등록 API
@@ -80,6 +90,7 @@ public class MusicController {
             return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+
     /**
      * 음악 수정 API
      * [PUT] /api/music/{id}
@@ -100,6 +111,11 @@ public class MusicController {
     }
 
     //음악 삭제
+    /**
+     * 음악 삭제 API
+     * [DELETE] /api/music/{id}
+     * @param id
+     */
 }
 
 
