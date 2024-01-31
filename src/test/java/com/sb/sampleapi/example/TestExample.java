@@ -33,6 +33,4 @@ public class TestExample {
     public void addTest() {
         assertEquals(210, Integer.sum(10, 200));
     }
-
-
 }
