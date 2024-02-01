@@ -6,6 +6,7 @@ import static org.mockito.Mockito.when;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.sb.sampleapi.domain.Music;
+import com.sb.sampleapi.domain.Music.MusicBuilder;
 import org.aspectj.lang.annotation.Before;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
@@ -21,6 +22,7 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpStatusCode;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.test.context.ContextConfiguration;
@@ -43,7 +45,6 @@ public class MusicRepositoryTest {
 
     @Autowired
     private MusicRepository musicRepository;
-
 
     //목록전체조회
     @Test
@@ -99,16 +100,26 @@ public class MusicRepositoryTest {
     @Test
     @DisplayName("Junit test for delete music")
     public void 음악삭제() throws Exception {
-        //given
-        long id = 1L;
-        Music savedmusic = musicRepository.findById(id).get();
-        //when
-        musicRepository.delete(savedmusic);
 
-        Optional<Music> optionalMusic = musicRepository.findById(id);
-        if (optionalMusic.isPresent()) {
-            fail("Delete failed.");
+        //given
+        long id = 999L;
+        String title = "new Title";
+        String artist = "new Artist";
+        String album = "new Album";
+
+        //when
+        Music savedMUsic = Music.builder()
+                .id(id)
+                .title(title)
+                .album(album)
+                .artist(artist)
+                .build();
+        musicRepository.deleteById(savedMUsic.getId());
+
+        //then
+        musicRepository.findById(id);
+        if (musicRepository.findById(id).isPresent()) {
+            fail("Delete failed");
         }
     }
-
 }
