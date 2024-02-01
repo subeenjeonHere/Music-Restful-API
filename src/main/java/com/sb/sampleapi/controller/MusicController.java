@@ -74,11 +74,6 @@ public class MusicController {
     }
 
     /**
-     * 음악 여러개 조회 API
-     *
-     */
-
-    /**
      * 음악 등록 API
      * [POST] /api/music
      */
