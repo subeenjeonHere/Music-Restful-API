@@ -18,6 +18,8 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.Optional;
 
+import static org.springframework.http.ResponseEntity.status;
+
 @RestController
 @Slf4j
 @Tag(name = "Music API", description = "음악 조회 CRUD API")
@@ -110,12 +112,18 @@ public class MusicController {
         }
     }
 
-    //음악 삭제
     /**
      * 음악 삭제 API
      * [DELETE] /api/music/{id}
+     *
      * @param id
      */
+    @DeleteMapping
+    public ResponseEntity<Music> deleteMusic(@Parameter(name = "id", description = "삭제할 Music의 id", in = ParameterIn.PATH) @PathVariable("id") Integer id) {
+        musicService.deleteById(id);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
 }
+
 
 

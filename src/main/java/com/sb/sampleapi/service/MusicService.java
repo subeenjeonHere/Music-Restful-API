@@ -28,4 +28,7 @@ public class MusicService {
         musicRepository.save(music);
     }
 
+    public void deleteById(Integer id) {
+        musicRepository.deleteById(id);
+    }
 }

@@ -33,6 +33,10 @@ public class Music {
     @Schema(description = "앨범")
     private String album;
 
+
+    public Music() {
+    }
+
     @Builder
     public Music(Long id, String title, String artist, String album) {
         this.id = id;
@@ -41,7 +45,5 @@ public class Music {
         this.album = album;
     }
 
-    public Music() {
 
-    }
 }

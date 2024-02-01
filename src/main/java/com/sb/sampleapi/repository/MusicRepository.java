@@ -9,4 +9,6 @@ import org.springframework.stereotype.Repository;
 public interface MusicRepository extends JpaRepository<Music, Long> {
 
     Music findById(Integer id);
+
+    void deleteById(Integer id);
 }
