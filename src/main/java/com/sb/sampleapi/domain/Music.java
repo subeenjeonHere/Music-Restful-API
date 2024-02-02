@@ -3,47 +3,38 @@ package com.sb.sampleapi.domain;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotBlank;
 import lombok.*;
+
+
+
 
 @Entity
 @Data
-@Table(name = "music")
 @Schema(name = "음악 조회 응답 Entity")
 public class Music {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id")
-    @Schema(description = "id")
-    private Long id;
+    @Column(name = "music_id")
+    @Schema(description = "음악 ID")
+    private Integer id;
 
-    @NotBlank
     @Column(name = "title")
-    @Schema(description = "타이틀")
+    @Schema(description = "음악 제목")
     private String title;
 
-    @NotBlank
-    @Column(name = "artist")
-    @Schema(description = "가수")
-    private String artist;
-
-    @NotBlank
-    @Column(name = "album")
+    @ManyToOne
+    @JoinColumn(name = "album_id")
     @Schema(description = "앨범")
-    private String album;
+    private Album album;
 
 
     public Music() {
     }
 
     @Builder
-    public Music(Long id, String title, String artist, String album) {
+    public Music(Integer id, String title) {
         this.id = id;
         this.title = title;
-        this.artist = artist;
-        this.album = album;
     }
-
-
 }

@@ -5,10 +5,12 @@ import com.sb.sampleapi.domain.Music;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
+import java.util.Optional;
+
 @Repository
-public interface MusicRepository extends JpaRepository<Music, Long> {
+public interface MusicRepository extends JpaRepository<Music, Integer> {
 
-    Music findById(Integer id);
+//    Optional<Music> findById(Integer id);
 
-    void deleteById(Integer id);
+//    void deleteById(Integer id);
 }

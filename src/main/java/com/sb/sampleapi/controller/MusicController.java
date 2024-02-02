@@ -9,7 +9,6 @@ import io.swagger.v3.oas.annotations.enums.ParameterIn;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import jakarta.persistence.criteria.CriteriaBuilder;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -38,7 +37,7 @@ public class MusicController {
      *
      * @return musicList
      */
-    @Operation(summary = "좋아하는 음악 목록 전체 조회", description = "등록된 모든 음악 목록을 조회합니다.")
+    @Operation(summary = "음악 목록 전체 조회", description = "등록된 모든 음악 목록을 조회합니다.")
     @GetMapping
     public ResponseEntity<List<Music>> getAllMusic() {
         List<Music> musicList = musicService.getAllMusic();
@@ -55,22 +54,18 @@ public class MusicController {
      * @param id
      * @return music
      */
-    @Operation(summary = "좋아하는 음악 단건 조회", description = "아이디(Id)를 통해 음악을 조회합니다.")
+    @Operation(summary = "음악 단건 조회", description = "아이디(Id)를 통해 음악을 조회합니다.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "음악 조회에 성공했습니다."),
             @ApiResponse(responseCode = "404", description = "음악을 찾을 수 없습니다.")
     })
     @GetMapping("/{id}")
     public ResponseEntity<Music> getMusic(@Parameter(name = "id", description = "Music의 id", in = ParameterIn.PATH) @PathVariable("id") Integer id) {
-        Music music = musicService.findBy(id);
-        if (music == null) {
-            return ResponseEntity.notFound()
-                    .build();
-        } else {
-            return ResponseEntity.ok()
-                    .header("200")
-                    .body(music);
-        }
+        Music music = new Music();
+        Optional<Music> optionalMusic = musicService.findBy(id);
+        return optionalMusic.map(tempMusic -> ResponseEntity.ok().body(music))
+                .orElseGet(() ->
+                        ResponseEntity.notFound().build());
     }
 
     /**
@@ -97,12 +92,13 @@ public class MusicController {
      */
     @Operation(summary = "음악 수정", description = "좋아하는 음악 정보를 수정합니다.")
     @PutMapping("/{id}")
-    public ResponseEntity<Music> updateMusic(@Parameter(name = "id", description = "수정할 Music의 id", in = ParameterIn.PATH) @PathVariable("id") Integer id, @RequestBody Music music) {
-        try {
-            Music updateMusic = musicService.findBy(id);
-            if (updateMusic.getId().equals(id)) musicService.save(music);
+    public ResponseEntity<Music> updateMusic(@Parameter(name = "id", description = "수정할 Music의 id", in = ParameterIn.PATH) @PathVariable("id") Integer id,
+                                             @RequestBody Music music) {
+        Optional<Music> updatedMusic = musicService.findBy(id);
+        if (updatedMusic.isPresent()) {
+            musicService.save(music);
             return new ResponseEntity<>(HttpStatus.OK);
-        } catch (Exception e) {
+        } else {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
@@ -113,7 +109,8 @@ public class MusicController {
      *
      * @param id
      */
-    @DeleteMapping
+    @Operation(summary = "음악 삭제", description = "좋아하는 음악을 삭제합니다.")
+    @DeleteMapping("/{id}")
     public ResponseEntity<Music> deleteMusic(@Parameter(name = "id", description = "삭제할 Music의 id", in = ParameterIn.PATH) @PathVariable("id") Integer id) {
         musicService.deleteById(id);
         return new ResponseEntity<>(HttpStatus.OK);

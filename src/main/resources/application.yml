@@ -22,8 +22,12 @@ spring:
           highlight_sql: true
   mvc:
     static-path-pattern: /swagger*
-    pathmatch:
+    path match:
       matching-strategy: ant_path_matcher
 springdoc:
   swagger-ui:
     path: /swagger-ui.html
+
+
+
+
